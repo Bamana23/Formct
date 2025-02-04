@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-itunes-app" content="app-id=505488770">
+    <title>Formulaire de Contact et Chat</title>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+    <!-- Styles Globaux -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 95% !important;
+            margin: 0 auto;
+            padding-top: 60px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        h2 {
+            color: #007bff;
+        }
+
+        .form-group input, .form-group textarea {
+            background-color: #f9f9f9;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-primary:disabled {
+            background-color: #b8d4ff;
+            cursor: not-allowed;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .status-message.success {
+            color: green;
+        }
+
+        .status-message.error {
+            color: red;
+        }
+
+        /* Style Chat */
+        .chat-bubble {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #007bff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+            z-index: 10;
+        }
+
+        .chat-bubble:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-bubble img {
+            width: 35px;
+            height: 35px;
+        }
+
+        .message-bubble {
+            position: fixed;
+            bottom: 20px;
+            right: 90px;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 2px;
+            font-size: 14px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+            max-width: 250px;
+            z-index: 5;
+            transition: opacity 0.3s ease-in-out;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+
+        .message-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 10px;
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent transparent #6a11cb transparent;
+        }
+
+        .close-message {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .chat-popup {
+            display: none;
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid #ccc;
+            z-index: 1000;
+        }
+
+        .chat-popup iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .close-chat {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: red;
+        }
+
+        @media screen and (max-width: 600px) {
+            .chat-popup {
+                width: 90%;
+                height: 400px;
+                bottom: 80px;
+            }
+
+            .chat-bubble {
+                width: 50px;
+                height: 50px;
+            }
+
+            .chat-bubble img {
+                width: 30px;
+                height: 30px;
+            }
+
+            .message-bubble {
+                bottom: 70px;
+                right: 70px;
+                font-size: 12px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Formulaire de Contact -->
+    <main class="container" id="contenu">
+        <h2 class="text-center">Formulaire de Contact</h2>
+
+        <form id="contactForm" action="" method="POST">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="nom">Nom</label>
+                                        <input class="form-control" id="nom" name="nom" type="text" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="prenom">Prénom</label>
+                                        <input class="form-control" id="prenom" name="prenom" type="text" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Adresse E-mail</label>
+                                <input class="form-control" id="email" name="email" type="email" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telephone">Numéro de téléphone</label>
+                                <input class="form-control" id="telephone" name="telephone" type="tel" pattern="[0-9]{10}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sujet">Sujet</label>
+                                <input class="form-control" id="sujet" name="sujet" type="text" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                            </div>
+
+                            <!-- Case d'acceptation des conditions -->
+                            <div class="form-group">
+                                <input type="checkbox" id="acceptation" required>
+                                <label for="acceptation">J'accepte les conditions d'utilisation</label>
+                            </div>
+
+                            <!-- Bouton de soumission désactivé par défaut -->
+                            <button type="submit" id="submit-btn" class="btn btn-primary" disabled>Envoyer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Message de statut -->
+        <div id="statusMessage" class="status-message"></div>
+    </main>
+
+    <!-- Section de Chat -->
+    <div class="chat-bubble" id="chatBubble">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968804.png" alt="Chat">
+    </div>
+
+    <div class="message-bubble" id="messageBubble">
+        Besoin d'aide ? Nos conseillers sont là pour vous, 24/7 !
+        <span class="close-message" id="closeMessage">&times;</span>
+    </div>
+
+    <!-- Fenêtre de chat -->
+    <div class="chat-popup" id="chatPopup">
+        <span class="close-chat" id="closeChat">&times;</span>
+        <iframe id="chatIframe"></iframe>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>
